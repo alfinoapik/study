@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Daily Study Reminder</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background-color: #f8f9fa;
+    }
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    th, td {
+      padding: 10px;
+      text-align: center;
+      border: 1px solid #ccc;
+    }
+    th {
+      background-color: #007bff;
+      color: white;
+    }
+    tr.today {
+      background-color: #d1e7dd;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <h1>Daily Study Reminder</h1>
+  <table>
+    <thead>
+      <tr>
+        <th>Date</th>
+        <th>Web D</th>
+        <th>Security+</th>
+        <th>Linux</th>
+        <th>Sec+ Practice</th>
+      </tr>
+    </thead>
+    <tbody id="schedule-body">
+      <!-- Rows will be added by JavaScript -->
+    </tbody>
+  </table>
+
+  <script>
+    const schedule = [
+      ["24 June", "25(210-211)", "15", "102-108", "Security control"],
+      ["25 June", "25(212-213)", "16", "109-115", "Encryption"],
+      ["26 June", "26", "16", "116-123", "hashing"],
+      ["27 June", "27", "17", "124-133", ""],
+      ["28 June", "27", "17-18", "134-140", ""],
+      ["29 June", "28", "18", "7", ""],
+      ["30 June", "28", "19", "7", ""],
+      ["1 July", "29", "20", "7", ""],
+      ["2 July", "30", "21", "7", ""],
+      ["3 July", "30", "22", "7", ""],
+      ["4 July", "31-32", "22-23", "7", ""],
+      ["5 July", "33", "23", "7", ""],
+      ["6 July", "33", "24", "7", ""],
+      ["7 July", "33", "25", "8", ""],
+      ["8 July", "33", "26", "8", ""],
+      ["9 July", "34", "27-28-29", "8", ""],
+      ["10 July", "35", "", "8", ""],
+      ["11 July", "35", "", "8", ""]
+    ];
+
+    const today = new Date();
+    const todayStr = today.toLocaleDateString('en-GB', {
+      day: '2-digit',
+      month: 'long'
+    });
+
+    const tbody = document.getElementById("schedule-body");
+    schedule.forEach(row => {
+      const tr = document.createElement("tr");
+      if (row[0] === todayStr) tr.classList.add("today");
+      row.forEach(cell => {
+        const td = document.createElement("td");
+        td.textContent = cell;
+        tr.appendChild(td);
+      });
+      tbody.appendChild(tr);
+    });
+  </script>
+</body>
+</html>
