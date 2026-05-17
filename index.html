@@ -1,159 +1,985 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Happy Mother's Day 💐</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
-<style>
-  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-  :root {
-    --rose: #e8445a; --blush: #f9c8d4; --petal: #f4a0b5;
-    --deep: #8b1a2f; --lavender: #c9a7d6; --gold: #d4a843;
-    --cream: #fff8f2; --mint: #a8d5bc;
-  }
-  body { font-family: 'Lora', serif; background: var(--cream); overflow: hidden; cursor: none; height: 100vh; }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CompTIA Security+ Port Study Guide</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-  .cursor { position: fixed; width: 18px; height: 18px; background: var(--rose); border-radius: 50%; pointer-events: none; z-index: 9999; transform: translate(-50%,-50%); mix-blend-mode: multiply; }
-  .cursor-trail { position: fixed; width: 7px; height: 7px; border: 2px solid var(--petal); border-radius: 50%; pointer-events: none; z-index: 9998; transform: translate(-50%,-50%); opacity: 0.7; }
+    :root {
+      --bg: #0f1117;
+      --surface: #1a1d27;
+      --surface2: #222535;
+      --border: #2e3250;
+      --accent: #6c63ff;
+      --accent2: #00d4aa;
+      --accent3: #ff6b6b;
+      --text: #e2e8f0;
+      --muted: #8892b0;
+      --green: #4ade80;
+      --red: #f87171;
+      --yellow: #fbbf24;
+    }
 
-  #petal-canvas { position: fixed; inset: 0; pointer-events: none; z-index: 1; }
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
 
-  .hearts-container { position: fixed; inset: 0; pointer-events: none; z-index: 3; overflow: hidden; }
-  .heart { position: absolute; bottom: -60px; opacity: 0; }
-  @keyframes heart-rise {
-    0%   { transform: translateY(0) rotate(0deg) scale(0.8); opacity: 0; }
-    10%  { opacity: 0.8; }
-    90%  { opacity: 0.5; }
-    100% { transform: translateY(-110vh) rotate(720deg) scale(1.2); opacity: 0; }
-  }
+    /* NAV */
+    nav {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 0 2rem;
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .nav-brand {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--accent);
+      padding: 1rem 0;
+      white-space: nowrap;
+    }
+    .nav-tabs {
+      display: flex;
+      gap: 0;
+    }
+    .nav-tab {
+      padding: 1rem 1.4rem;
+      cursor: pointer;
+      color: var(--muted);
+      font-size: 0.9rem;
+      font-weight: 500;
+      border-bottom: 2px solid transparent;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+    .nav-tab:hover { color: var(--text); }
+    .nav-tab.active { color: var(--accent); border-bottom-color: var(--accent); }
 
-  .ribbon { position: fixed; top: 0; left: 0; right: 0; height: 5px; background: linear-gradient(90deg, var(--rose), var(--lavender), var(--gold), var(--mint), var(--rose)); background-size: 300% 100%; animation: rainbow 3s linear infinite; z-index: 100; }
-  @keyframes rainbow { 0% { background-position: 0% 50%; } 100% { background-position: 300% 50%; } }
+    /* SECTIONS */
+    .section { display: none; padding: 2rem; max-width: 1200px; margin: 0 auto; }
+    .section.active { display: block; }
 
-  .hero { position: relative; width: 100%; height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; background: linear-gradient(160deg, #fff0f5 0%, #ffe8ef 45%, #ffd6e4 100%); overflow: hidden; z-index: 2; }
-  .hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 80% 60% at 50% 45%, rgba(232,68,90,0.10) 0%, transparent 70%); animation: pulse-bg 4s ease-in-out infinite; }
-  @keyframes pulse-bg { 0%,100% { opacity:1; transform:scale(1); } 50% { opacity:0.5; transform:scale(1.08); } }
+    h2 { font-size: 1.5rem; margin-bottom: 0.4rem; }
+    .subtitle { color: var(--muted); font-size: 0.9rem; margin-bottom: 1.5rem; }
 
-  .flower-ring { position: absolute; width: 700px; height: 700px; top: 50%; left: 50%; margin: -350px 0 0 -350px; animation: spin 30s linear infinite; }
-  .flower-ring-inner { position: absolute; width: 440px; height: 440px; top: 50%; left: 50%; margin: -220px 0 0 -220px; animation: spin 20s linear infinite reverse; }
-  .flower-ring span, .flower-ring-inner span { position: absolute; top: 50%; left: 50%; transform-origin: 0 0; }
-  @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+    /* ===================== PORT CHART ===================== */
+    .search-bar {
+      display: flex;
+      gap: 0.75rem;
+      margin-bottom: 1.2rem;
+      flex-wrap: wrap;
+    }
+    .search-bar input {
+      flex: 1;
+      min-width: 200px;
+      padding: 0.6rem 1rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      font-size: 0.9rem;
+    }
+    .search-bar input:focus { outline: none; border-color: var(--accent); }
+    .filter-btns { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+    .filter-btn {
+      padding: 0.5rem 0.9rem;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--muted);
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .filter-btn:hover, .filter-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
 
-  .hero-title { position: relative; z-index: 5; text-align: center; animation: float 3.5s ease-in-out infinite; }
-  @keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-14px); } }
+    .table-wrap { overflow-x: auto; border-radius: 10px; border: 1px solid var(--border); }
+    table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+    thead th {
+      background: var(--surface2);
+      padding: 0.75rem 1rem;
+      text-align: left;
+      font-weight: 600;
+      color: var(--muted);
+      text-transform: uppercase;
+      font-size: 0.75rem;
+      letter-spacing: 0.05em;
+      cursor: pointer;
+      user-select: none;
+    }
+    thead th:hover { color: var(--text); }
+    thead th .sort-arrow { margin-left: 4px; opacity: 0.5; }
+    tbody tr { border-top: 1px solid var(--border); transition: background 0.15s; }
+    tbody tr:hover { background: var(--surface); }
+    tbody td { padding: 0.7rem 1rem; }
 
-  .title-happy { font-family: 'Playfair Display', serif; font-style: italic; font-size: clamp(1.6rem,4.5vw,3.2rem); color: var(--deep); letter-spacing: 0.08em; opacity: 0; animation: slide-up 0.9s ease forwards 0.3s; }
-  .title-main { font-family: 'Playfair Display', serif; font-weight: 700; font-size: clamp(3.5rem,11vw,9rem); line-height: 1; background: linear-gradient(135deg, var(--rose) 0%, #c2185b 40%, var(--deep) 100%); background-size: 200% auto; -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; opacity: 0; animation: slide-up 0.9s ease forwards 0.55s, shimmer 5s linear infinite 1.8s; }
-  @keyframes shimmer { 0% { background-position: 0% center; } 100% { background-position: 200% center; } }
-  .title-day { font-family: 'Playfair Display', serif; font-weight: 700; font-size: clamp(2.5rem,8vw,6.5rem); color: var(--gold); letter-spacing: 0.18em; opacity: 0; animation: slide-up 0.9s ease forwards 0.8s; }
-  @keyframes slide-up { from { opacity: 0; transform: translateY(36px); } to { opacity: 1; transform: translateY(0); } }
+    .badge {
+      display: inline-block;
+      padding: 0.2rem 0.55rem;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+    .badge-tcp { background: #1e3a5f; color: #60a5fa; }
+    .badge-udp { background: #1e4d3a; color: #4ade80; }
+    .badge-both { background: #3d2e5f; color: #c084fc; }
+    .badge-cat-net { background: #1e3a5f33; color: #60a5fa; border: 1px solid #1e3a5f; }
+    .badge-cat-sec { background: #3d2e5f33; color: #c084fc; border: 1px solid #3d2e5f; }
+    .badge-cat-email { background: #1e4d3a33; color: #4ade80; border: 1px solid #1e4d3a; }
+    .badge-cat-web { background: #4d3a1e33; color: #fb923c; border: 1px solid #4d3a1e; }
+    .badge-cat-file { background: #4d1e2e33; color: #f87171; border: 1px solid #4d1e2e; }
+    .badge-cat-dir { background: #1e4d4d33; color: #2dd4bf; border: 1px solid #1e4d4d; }
+    .badge-cat-remote { background: #4d4d1e33; color: #fbbf24; border: 1px solid #4d4d1e; }
 
-  .hero-sub { position: relative; z-index: 5; font-style: italic; font-size: clamp(0.95rem,2.2vw,1.3rem); color: #9b3a5a; margin-top: 1.4rem; opacity: 0; animation: slide-up 0.9s ease forwards 1.1s; text-align: center; padding: 0 2rem; max-width: 520px; }
+    .port-num { font-weight: 700; color: var(--accent2); font-family: monospace; font-size: 0.95rem; }
+    .port-name { font-weight: 600; }
+    .exam-tip { color: var(--yellow); font-size: 0.8rem; margin-top: 0.2rem; display: block; }
 
-  .confetti-piece { position: fixed; pointer-events: none; z-index: 9999; animation: confetti-fall linear forwards; }
-  @keyframes confetti-fall { 0% { opacity: 1; } 100% { transform: translateY(80vh) rotate(720deg); opacity: 0; } }
+    .stats-row {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+    .stat-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.75rem 1.2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+    }
+    .stat-card .num { font-size: 1.4rem; font-weight: 700; color: var(--accent); }
+    .stat-card .lbl { font-size: 0.75rem; color: var(--muted); }
 
-  footer { position: fixed; bottom: 0; left: 0; right: 0; background: linear-gradient(90deg, var(--deep), #c2185b, var(--deep)); background-size: 200% 100%; animation: footer-shift 6s ease-in-out infinite; color: white; text-align: center; padding: 0.9rem 1rem; z-index: 10; }
-  @keyframes footer-shift { 0%,100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
-  footer p { font-family: 'Playfair Display', serif; font-style: italic; font-size: clamp(0.9rem,2.5vw,1.2rem); animation: glow 2.5s ease-in-out infinite; }
-  @keyframes glow { 0%,100% { text-shadow: 0 0 8px rgba(255,255,255,0.2); } 50% { text-shadow: 0 0 24px rgba(255,200,200,0.9), 0 0 50px rgba(255,100,150,0.4); } }
+    /* ===================== FLASHCARDS ===================== */
+    .flashcard-controls {
+      display: flex;
+      gap: 0.75rem;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .flashcard-controls select, .flashcard-controls button {
+      padding: 0.55rem 1rem;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      font-size: 0.88rem;
+      cursor: pointer;
+    }
+    .flashcard-controls button { transition: all 0.2s; }
+    .flashcard-controls button:hover { background: var(--accent); border-color: var(--accent); }
+    .fc-progress-text { margin-left: auto; color: var(--muted); font-size: 0.9rem; }
 
-  @media (max-width: 600px) {
-    .flower-ring { width: 340px; height: 340px; margin: -170px 0 0 -170px; }
-    .flower-ring-inner { width: 220px; height: 220px; margin: -110px 0 0 -110px; }
-  }
-</style>
+    .flashcard-arena {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.5rem;
+    }
+    .fc-progress-bar {
+      width: 100%;
+      max-width: 600px;
+      height: 4px;
+      background: var(--border);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+    .fc-progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      transition: width 0.4s;
+    }
+
+    .flashcard {
+      width: 100%;
+      max-width: 600px;
+      height: 260px;
+      perspective: 1000px;
+      cursor: pointer;
+    }
+    .flashcard-inner {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      transform-style: preserve-3d;
+      transition: transform 0.55s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .flashcard.flipped .flashcard-inner { transform: rotateY(180deg); }
+
+    .fc-face {
+      position: absolute;
+      inset: 0;
+      backface-visibility: hidden;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      gap: 0.75rem;
+    }
+    .fc-front { background: var(--surface); }
+    .fc-back {
+      background: linear-gradient(135deg, #1a1d27, #222535);
+      transform: rotateY(180deg);
+      border-color: var(--accent);
+    }
+    .fc-hint { font-size: 0.75rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; }
+    .fc-main { font-size: 2rem; font-weight: 800; color: var(--accent2); font-family: monospace; }
+    .fc-sub { font-size: 1rem; color: var(--muted); }
+    .fc-answer-port { font-size: 2.2rem; font-weight: 800; color: var(--accent); font-family: monospace; }
+    .fc-answer-proto { font-size: 0.85rem; color: var(--muted); margin-top: 0.25rem; }
+    .fc-answer-desc { font-size: 0.88rem; color: var(--text); text-align: center; max-width: 380px; }
+
+    .fc-nav {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+    }
+    .fc-btn {
+      padding: 0.6rem 1.4rem;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .fc-btn:hover { background: var(--surface2); }
+    .fc-btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+    .fc-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    .fc-score-row {
+      display: flex;
+      gap: 1rem;
+    }
+    .fc-score-btn {
+      padding: 0.6rem 1.4rem;
+      border-radius: 8px;
+      border: none;
+      font-size: 0.88rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .fc-score-btn.know { background: #166534; color: #4ade80; }
+    .fc-score-btn.know:hover { background: #15803d; }
+    .fc-score-btn.dontknow { background: #7f1d1d; color: #f87171; }
+    .fc-score-btn.dontknow:hover { background: #991b1b; }
+
+    .fc-summary {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+      text-align: center;
+    }
+    .fc-summary.visible { display: flex; }
+    .fc-summary .big-score { font-size: 3rem; font-weight: 800; }
+    .fc-summary .score-label { color: var(--muted); }
+
+    /* ===================== MCQ ===================== */
+    .mcq-config {
+      display: flex;
+      gap: 0.75rem;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .mcq-config select, .mcq-config button {
+      padding: 0.55rem 1rem;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      font-size: 0.88rem;
+      cursor: pointer;
+    }
+    .mcq-config button { transition: all 0.2s; }
+    .mcq-config button:hover { background: var(--accent); border-color: var(--accent); }
+
+    .mcq-arena { display: flex; flex-direction: column; gap: 1.5rem; }
+
+    .mcq-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+    .mcq-counter { color: var(--muted); font-size: 0.9rem; }
+    .mcq-score-badge {
+      padding: 0.3rem 0.8rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-size: 0.85rem;
+    }
+
+    .mcq-progress-bar {
+      width: 100%;
+      height: 4px;
+      background: var(--border);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+    .mcq-progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      transition: width 0.4s;
+    }
+
+    .mcq-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+    }
+    .mcq-question { font-size: 1.05rem; font-weight: 500; margin-bottom: 1.2rem; line-height: 1.6; }
+    .mcq-options { display: flex; flex-direction: column; gap: 0.6rem; }
+    .mcq-option {
+      padding: 0.75rem 1.1rem;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--surface2);
+      cursor: pointer;
+      transition: all 0.2s;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .mcq-option:hover:not(.disabled) { border-color: var(--accent); background: #6c63ff15; }
+    .mcq-option.selected { border-color: var(--accent); background: #6c63ff20; }
+    .mcq-option.correct { border-color: var(--green); background: #4ade8015; color: var(--green); }
+    .mcq-option.wrong { border-color: var(--red); background: #f8717115; color: var(--red); }
+    .mcq-option.disabled { cursor: default; }
+    .opt-letter {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.78rem;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+    .mcq-option.correct .opt-letter { background: var(--green); color: #000; }
+    .mcq-option.wrong .opt-letter { background: var(--red); color: #000; }
+
+    .mcq-explanation {
+      display: none;
+      margin-top: 1rem;
+      padding: 0.9rem 1.1rem;
+      background: var(--surface2);
+      border-radius: 8px;
+      border-left: 3px solid var(--accent2);
+      font-size: 0.88rem;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+    .mcq-explanation.visible { display: block; }
+    .mcq-explanation strong { color: var(--text); }
+
+    .mcq-footer {
+      display: flex;
+      justify-content: flex-end;
+      gap: 0.75rem;
+    }
+    .mcq-btn {
+      padding: 0.65rem 1.5rem;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .mcq-btn:hover { background: var(--surface2); }
+    .mcq-btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+    .mcq-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    .mcq-summary {
+      display: none;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 2rem;
+      text-align: center;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+    }
+    .mcq-summary.visible { display: flex; }
+    .mcq-summary .big { font-size: 3.5rem; font-weight: 800; }
+    .mcq-summary .grade { font-size: 1.1rem; color: var(--muted); }
+    .result-breakdown {
+      display: flex;
+      gap: 1.5rem;
+      margin-top: 0.5rem;
+    }
+    .rb-item { display: flex; flex-direction: column; align-items: center; gap: 0.2rem; }
+    .rb-item .rb-num { font-size: 1.5rem; font-weight: 700; }
+    .rb-item .rb-lbl { font-size: 0.78rem; color: var(--muted); }
+
+    /* RESPONSIVE */
+    @media (max-width: 600px) {
+      nav { padding: 0 1rem; gap: 0; }
+      .nav-tab { padding: 0.9rem 0.8rem; font-size: 0.8rem; }
+      .section { padding: 1rem; }
+      .fc-main { font-size: 1.5rem; }
+    }
+  </style>
 </head>
 <body>
 
-<div class="ribbon"></div>
-<div class="cursor" id="cursor"></div>
-<div class="cursor-trail" id="cursorTrail"></div>
-<div class="hearts-container" id="hearts"></div>
-<canvas id="petal-canvas"></canvas>
-
-<section class="hero" onclick="explodeConfetti(event)">
-  <div class="flower-ring" id="ring1"></div>
-  <div class="flower-ring-inner" id="ring2"></div>
-  <div class="hero-title">
-    <div class="title-happy">Happy</div>
-    <div class="title-main">Mother's</div>
-    <div class="title-day">Day</div>
+<nav>
+  <div class="nav-brand">⚡ Security+ Ports</div>
+  <div class="nav-tabs">
+    <div class="nav-tab active" onclick="showTab('chart')">Port Chart</div>
+    <div class="nav-tab" onclick="showTab('flashcard')">Flashcards</div>
+    <div class="nav-tab" onclick="showTab('mcq')">MCQ Quiz</div>
   </div>
-  <p class="hero-sub">To the most extraordinary woman in my world — I love you, Mom 💗</p>
-</section>
+</nav>
 
-<footer><p>💐 Celebrating you today, tomorrow & always 💐</p></footer>
+<!-- ============================================================ PORT CHART ============================================================ -->
+<div id="chart" class="section active">
+  <h2>Port &amp; Protocol Reference</h2>
+  <p class="subtitle">All ports you need to know for the CompTIA Security+ exam</p>
+
+  <div class="stats-row" id="statsRow"></div>
+
+  <div class="search-bar">
+    <input type="text" id="searchInput" placeholder="Search by port, name, or description..." oninput="renderTable()" />
+    <div class="filter-btns" id="filterBtns"></div>
+  </div>
+
+  <div class="table-wrap">
+    <table id="portTable">
+      <thead>
+        <tr>
+          <th onclick="sortTable('port')">Port <span class="sort-arrow">↕</span></th>
+          <th onclick="sortTable('name')">Protocol / Service <span class="sort-arrow">↕</span></th>
+          <th>Transport</th>
+          <th>Category</th>
+          <th>Description &amp; Exam Notes</th>
+        </tr>
+      </thead>
+      <tbody id="portBody"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ============================================================ FLASHCARDS ============================================================ -->
+<div id="flashcard" class="section">
+  <h2>Flashcards</h2>
+  <p class="subtitle">Click the card to reveal the answer. Mark each one to track your progress.</p>
+
+  <div class="flashcard-controls">
+    <select id="fcFilter" onchange="initFlashcards()">
+      <option value="all">All Categories</option>
+      <option value="Network">Networking</option>
+      <option value="Email">Email</option>
+      <option value="Web">Web</option>
+      <option value="File Transfer">File Transfer</option>
+      <option value="Security">Security / VPN</option>
+      <option value="Directory">Directory Services</option>
+      <option value="Remote Access">Remote Access</option>
+    </select>
+    <select id="fcMode" onchange="initFlashcards()">
+      <option value="port">Port → Name</option>
+      <option value="name">Name → Port</option>
+    </select>
+    <button onclick="shuffleCards()">Shuffle</button>
+    <button onclick="initFlashcards()">Restart</button>
+    <span class="fc-progress-text" id="fcProgressText"></span>
+  </div>
+
+  <div class="flashcard-arena" id="fcArena">
+    <div class="fc-progress-bar"><div class="fc-progress-fill" id="fcFill" style="width:0%"></div></div>
+    <div class="flashcard" id="fcCard" onclick="flipCard()">
+      <div class="flashcard-inner" id="fcInner">
+        <div class="fc-face fc-front">
+          <span class="fc-hint" id="fcHint"></span>
+          <span class="fc-main" id="fcMain"></span>
+          <span class="fc-sub" id="fcSub"></span>
+        </div>
+        <div class="fc-face fc-back">
+          <span class="fc-hint">Answer</span>
+          <span class="fc-answer-port" id="fcAnsPort"></span>
+          <span class="fc-answer-proto" id="fcAnsProto"></span>
+          <span class="fc-answer-desc" id="fcAnsDesc"></span>
+        </div>
+      </div>
+    </div>
+    <div class="fc-nav">
+      <button class="fc-btn" id="fcPrev" onclick="fcNavigate(-1)">← Prev</button>
+      <div class="fc-score-row">
+        <button class="fc-score-btn dontknow" onclick="markCard(false)">✗ Still Learning</button>
+        <button class="fc-score-btn know" onclick="markCard(true)">✓ Got It</button>
+      </div>
+      <button class="fc-btn" id="fcNext" onclick="fcNavigate(1)">Next →</button>
+    </div>
+  </div>
+
+  <div class="fc-summary" id="fcSummary">
+    <div class="big-score" id="fcBigScore"></div>
+    <div class="score-label">cards mastered this round</div>
+    <button class="fc-btn primary" onclick="initFlashcards()">Try Again</button>
+  </div>
+</div>
+
+<!-- ============================================================ MCQ ============================================================ -->
+<div id="mcq" class="section">
+  <h2>MCQ Practice Quiz</h2>
+  <p class="subtitle">Test your knowledge with exam-style multiple choice questions</p>
+
+  <div class="mcq-config">
+    <select id="mcqCount">
+      <option value="10">10 Questions</option>
+      <option value="20" selected>20 Questions</option>
+      <option value="30">30 Questions</option>
+      <option value="all">All Questions</option>
+    </select>
+    <select id="mcqCat">
+      <option value="all">All Categories</option>
+      <option value="Network">Networking</option>
+      <option value="Email">Email</option>
+      <option value="Web">Web</option>
+      <option value="File Transfer">File Transfer</option>
+      <option value="Security">Security / VPN</option>
+      <option value="Directory">Directory Services</option>
+      <option value="Remote Access">Remote Access</option>
+    </select>
+    <button onclick="startQuiz()">Start Quiz</button>
+  </div>
+
+  <div class="mcq-arena" id="mcqArena" style="display:none;">
+    <div class="mcq-header">
+      <span class="mcq-counter" id="mcqCounter"></span>
+      <span class="mcq-score-badge" id="mcqScoreBadge"></span>
+    </div>
+    <div class="mcq-progress-bar"><div class="mcq-progress-fill" id="mcqFill" style="width:0%"></div></div>
+    <div class="mcq-card">
+      <div class="mcq-question" id="mcqQuestion"></div>
+      <div class="mcq-options" id="mcqOptions"></div>
+      <div class="mcq-explanation" id="mcqExplanation"></div>
+    </div>
+    <div class="mcq-footer">
+      <button class="mcq-btn" id="mcqCheckBtn" onclick="checkAnswer()">Check Answer</button>
+      <button class="mcq-btn primary" id="mcqNextBtn" onclick="nextQuestion()" style="display:none;">Next →</button>
+    </div>
+  </div>
+
+  <div class="mcq-summary" id="mcqSummary">
+    <div>Quiz Summary</div>
+    <div class="big" id="mcqBigScore"></div>
+    <div class="grade" id="mcqGrade"></div>
+    <div class="result-breakdown">
+      <div class="rb-item"><div class="rb-num" id="rbCorrect" style="color:var(--green)"></div><div class="rb-lbl">Correct</div></div>
+      <div class="rb-item"><div class="rb-num" id="rbWrong" style="color:var(--red)"></div><div class="rb-lbl">Wrong</div></div>
+      <div class="rb-item"><div class="rb-num" id="rbTotal"></div><div class="rb-lbl">Total</div></div>
+    </div>
+    <button class="mcq-btn primary" onclick="startQuiz()">Retake Quiz</button>
+  </div>
+</div>
 
 <script>
-// Cursor
-const cursor = document.getElementById('cursor');
-const cursorTrail = document.getElementById('cursorTrail');
-let mx=0,my=0,tx=0,ty=0;
-document.addEventListener('mousemove', e => { mx=e.clientX; my=e.clientY; cursor.style.left=mx+'px'; cursor.style.top=my+'px'; });
-setInterval(() => { tx+=(mx-tx)*0.15; ty+=(my-ty)*0.15; cursorTrail.style.left=tx+'px'; cursorTrail.style.top=ty+'px'; }, 16);
+// ====================================================================
+// DATA
+// ====================================================================
+const PORTS = [
+  // Network
+  { port: 20, name: "FTP Data", transport: "TCP", cat: "File Transfer", desc: "FTP active mode data transfer", tip: "FTP uses 2 ports: 20 (data) and 21 (control)" },
+  { port: 21, name: "FTP Control", transport: "TCP", cat: "File Transfer", desc: "FTP command/control channel", tip: "Unencrypted; prefer SFTP (22) or FTPS (990)" },
+  { port: 22, name: "SSH / SFTP / SCP", transport: "TCP", cat: "Remote Access", desc: "Secure Shell, Secure FTP, Secure Copy", tip: "The go-to secure replacement for Telnet (23) and FTP" },
+  { port: 23, name: "Telnet", transport: "TCP", cat: "Remote Access", desc: "Unencrypted remote terminal protocol", tip: "Insecure – transmits in cleartext. Replaced by SSH" },
+  { port: 25, name: "SMTP", transport: "TCP", cat: "Email", desc: "Simple Mail Transfer Protocol – sending email between servers", tip: "Unauthenticated relay – often abused for spam" },
+  { port: 49, name: "TACACS+", transport: "TCP", cat: "Security", desc: "Terminal Access Controller Access-Control System+", tip: "Cisco AAA protocol; encrypts the entire payload (vs RADIUS)" },
+  { port: 53, name: "DNS", transport: "Both", cat: "Network", desc: "Domain Name System – hostname to IP resolution", tip: "UDP for queries; TCP for zone transfers / large responses" },
+  { port: 67, name: "DHCP Server", transport: "UDP", cat: "Network", desc: "DHCP server port – leases IP addresses to clients", tip: "Remember: 67=server, 68=client" },
+  { port: 68, name: "DHCP Client", transport: "UDP", cat: "Network", desc: "DHCP client port – receives IP lease from server", tip: "Rogue DHCP servers can redirect traffic (MITM)" },
+  { port: 69, name: "TFTP", transport: "UDP", cat: "File Transfer", desc: "Trivial File Transfer Protocol – no auth, no directory listing", tip: "Used to boot network devices (PXE). Very insecure" },
+  { port: 80, name: "HTTP", transport: "TCP", cat: "Web", desc: "HyperText Transfer Protocol – unencrypted web traffic", tip: "Cleartext – susceptible to sniffing and MITM attacks" },
+  { port: 88, name: "Kerberos", transport: "Both", cat: "Security", desc: "Kerberos authentication protocol (ticket-based)", tip: "Used by Active Directory for SSO; tickets have a lifetime" },
+  { port: 110, name: "POP3", transport: "TCP", cat: "Email", desc: "Post Office Protocol v3 – downloads email from server", tip: "Unencrypted; use POP3S (995) instead" },
+  { port: 119, name: "NNTP", transport: "TCP", cat: "Network", desc: "Network News Transfer Protocol – Usenet newsgroups", tip: "Rarely tested but appears on some Security+ objectives" },
+  { port: 123, name: "NTP", transport: "UDP", cat: "Network", desc: "Network Time Protocol – clock synchronisation", tip: "Time sync critical for Kerberos (5-min skew tolerance)" },
+  { port: 135, name: "RPC / DCOM", transport: "TCP", cat: "Network", desc: "Microsoft Remote Procedure Call endpoint mapper", tip: "Targeted by Blaster worm; should be blocked at perimeter" },
+  { port: 137, name: "NetBIOS Name", transport: "UDP", cat: "Network", desc: "NetBIOS Name Service – Windows name resolution", tip: "Legacy; disable on modern networks to prevent NBT-NS spoofing" },
+  { port: 138, name: "NetBIOS Datagram", transport: "UDP", cat: "Network", desc: "NetBIOS Datagram Service", tip: "Disable if not needed; used in older Windows file sharing" },
+  { port: 139, name: "NetBIOS Session", transport: "TCP", cat: "Network", desc: "NetBIOS Session Service – Windows file/printer sharing", tip: "Exploited by EternalBlue; block at firewall" },
+  { port: 143, name: "IMAP", transport: "TCP", cat: "Email", desc: "Internet Message Access Protocol – access email on server", tip: "Keeps email on server; use IMAPS (993) for encryption" },
+  { port: 161, name: "SNMP", transport: "UDP", cat: "Network", desc: "Simple Network Management Protocol – device monitoring (receive)", tip: "v1/v2c use community strings in cleartext; use SNMPv3" },
+  { port: 162, name: "SNMP Trap", transport: "UDP", cat: "Network", desc: "SNMP trap/notification from agent to manager", tip: "Unsolicited alerts; v3 adds authentication and encryption" },
+  { port: 389, name: "LDAP", transport: "TCP", cat: "Directory", desc: "Lightweight Directory Access Protocol – directory queries", tip: "Unencrypted; use LDAPS (636) or StartTLS" },
+  { port: 443, name: "HTTPS", transport: "TCP", cat: "Web", desc: "HTTP over TLS – encrypted web traffic", tip: "TLS 1.2+ required; TLS 1.0/1.1 deprecated" },
+  { port: 445, name: "SMB / CIFS", transport: "TCP", cat: "File Transfer", desc: "Server Message Block – Windows file sharing (direct TCP)", tip: "EternalBlue / WannaCry exploited this port; block externally" },
+  { port: 465, name: "SMTPS", transport: "TCP", cat: "Email", desc: "SMTP over TLS (legacy implicit TLS)", tip: "Modern alternative is SMTP+STARTTLS on port 587" },
+  { port: 500, name: "IKE / ISAKMP", transport: "UDP", cat: "Security", desc: "Internet Key Exchange – IPsec VPN key negotiation", tip: "Phase 1 of IPsec tunnel establishment" },
+  { port: 514, name: "Syslog", transport: "UDP", cat: "Network", desc: "System logging protocol – send logs to central server", tip: "Plaintext UDP; use syslog over TLS (port 6514) for security" },
+  { port: 515, name: "LPD / LPR", transport: "TCP", cat: "Network", desc: "Line Printer Daemon – legacy print protocol", tip: "Often left open unintentionally; attack surface" },
+  { port: 587, name: "SMTP Submission", transport: "TCP", cat: "Email", desc: "Authenticated SMTP for client-to-server mail submission", tip: "Preferred over 25 for client submission; requires auth" },
+  { port: 636, name: "LDAPS", transport: "TCP", cat: "Directory", desc: "LDAP over TLS – encrypted directory queries", tip: "Always prefer LDAPS or LDAP+StartTLS over plain LDAP" },
+  { port: 993, name: "IMAPS", transport: "TCP", cat: "Email", desc: "IMAP over TLS – encrypted email access", tip: "Secure version of IMAP (143)" },
+  { port: 995, name: "POP3S", transport: "TCP", cat: "Email", desc: "POP3 over TLS – encrypted email download", tip: "Secure version of POP3 (110)" },
+  { port: 1194, name: "OpenVPN", transport: "Both", cat: "Security", desc: "Open-source VPN using SSL/TLS", tip: "Can run on TCP or UDP; flexible and widely used" },
+  { port: 1433, name: "MS SQL Server", transport: "TCP", cat: "Network", desc: "Microsoft SQL Server database", tip: "Should never be exposed to the internet; frequent target" },
+  { port: 1521, name: "Oracle DB", transport: "TCP", cat: "Network", desc: "Oracle Database listener", tip: "Block externally; use encrypted connections" },
+  { port: 1701, name: "L2TP", transport: "UDP", cat: "Security", desc: "Layer 2 Tunneling Protocol – VPN tunneling", tip: "No encryption by itself; combine with IPsec for security" },
+  { port: 1723, name: "PPTP", transport: "TCP", cat: "Security", desc: "Point-to-Point Tunneling Protocol – legacy VPN", tip: "Considered weak; MS-CHAPv2 vulnerable. Avoid in prod" },
+  { port: 1812, name: "RADIUS Auth", transport: "UDP", cat: "Security", desc: "RADIUS authentication and authorisation", tip: "Encrypts only the password field; use RADSEC for full encryption" },
+  { port: 1813, name: "RADIUS Accounting", transport: "UDP", cat: "Security", desc: "RADIUS accounting – tracks session usage", tip: "Pair with 1812 for full RADIUS AAA" },
+  { port: 2049, name: "NFS", transport: "Both", cat: "File Transfer", desc: "Network File System – Unix/Linux file sharing", tip: "V4 adds strong auth (Kerberos) and encryption" },
+  { port: 3306, name: "MySQL / MariaDB", transport: "TCP", cat: "Network", desc: "MySQL database server", tip: "Common target; never expose publicly; restrict with firewall rules" },
+  { port: 3389, name: "RDP", transport: "TCP", cat: "Remote Access", desc: "Remote Desktop Protocol – Windows graphical remote access", tip: "BlueKeep (CVE-2019-0708) is critical; block at perimeter firewall" },
+  { port: 3868, name: "Diameter", transport: "TCP", cat: "Security", desc: "Successor to RADIUS for telco/4G AAA", tip: "Used in mobile networks (4G/LTE); more secure than RADIUS" },
+  { port: 4444, name: "Metasploit / Backdoor", transport: "TCP", cat: "Security", desc: "Default Metasploit listener / common backdoor port", tip: "Seeing traffic on 4444 is a red flag; indicator of compromise" },
+  { port: 4500, name: "IPsec NAT-T", transport: "UDP", cat: "Security", desc: "IPsec NAT Traversal – encapsulates IPsec in UDP", tip: "Needed when VPN client is behind NAT; works with port 500" },
+  { port: 5060, name: "SIP", transport: "Both", cat: "Network", desc: "Session Initiation Protocol – VoIP call setup", tip: "Unencrypted; use SIPS (5061/TLS) for secure VoIP" },
+  { port: 5061, name: "SIPS", transport: "TCP", cat: "Network", desc: "SIP over TLS – secure VoIP signalling", tip: "Always prefer SIPS over SIP for confidentiality" },
+  { port: 5432, name: "PostgreSQL", transport: "TCP", cat: "Network", desc: "PostgreSQL database server", tip: "Restrict access with pg_hba.conf and firewall rules" },
+  { port: 5900, name: "VNC", transport: "TCP", cat: "Remote Access", desc: "Virtual Network Computing – graphical remote desktop", tip: "Often lacks strong auth; tunnel through SSH if possible" },
+  { port: 6514, name: "Syslog TLS", transport: "TCP", cat: "Network", desc: "Syslog over TLS – encrypted centralised logging", tip: "Secure alternative to syslog UDP 514; required for compliance" },
+  { port: 8080, name: "HTTP Alternate", transport: "TCP", cat: "Web", desc: "Alternate HTTP port – common for proxies and dev servers", tip: "Often used as HTTP proxy; filter outbound traffic on this port" },
+  { port: 8443, name: "HTTPS Alternate", transport: "TCP", cat: "Web", desc: "Alternate HTTPS port – common for web apps and management", tip: "Many management interfaces use 8443; verify TLS config" },
+  { port: 9100, name: "JetDirect / RAW Print", transport: "TCP", cat: "Network", desc: "HP JetDirect raw printing protocol", tip: "Printers on 9100 can be attacked; restrict network access" },
+];
 
-// Flower rings
-const ring1=document.getElementById('ring1'), ring2=document.getElementById('ring2');
-['🌹','🌸','💐','🌺','🌷','🌼','💮','🏵️','🌻','🌹','🌸','💐'].forEach((f,i,a)=>{
-  const ang=(i/a.length)*2*Math.PI, s=document.createElement('span');
-  s.textContent=f; s.style.cssText=`transform:translate(${Math.cos(ang)*320}px,${Math.sin(ang)*320}px);font-size:clamp(1.1rem,2.2vw,2rem);`;
-  ring1.appendChild(s);
-});
-['💗','✨','💝','⭐','💫','🌟','💖','✨'].forEach((f,i,a)=>{
-  const ang=(i/a.length)*2*Math.PI, s=document.createElement('span');
-  s.textContent=f; s.style.cssText=`transform:translate(${Math.cos(ang)*190}px,${Math.sin(ang)*190}px);font-size:clamp(0.9rem,1.8vw,1.5rem);`;
-  ring2.appendChild(s);
-});
-
-// Hearts
-const hc=document.getElementById('hearts');
-const heartEmojis=['💗','💖','💝','💕','❤️','🌸','✨','💓'];
-function spawnHeart(){
-  const h=document.createElement('div'); h.className='heart';
-  h.textContent=heartEmojis[Math.floor(Math.random()*heartEmojis.length)];
-  const dur=7+Math.random()*7;
-  h.style.cssText=`left:${Math.random()*100}%;font-size:${0.8+Math.random()*1.4}rem;animation:heart-rise ${dur}s linear forwards;`;
-  hc.appendChild(h); setTimeout(()=>h.remove(),dur*1000);
+// ====================================================================
+// TAB NAVIGATION
+// ====================================================================
+function showTab(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  event.currentTarget.classList.add('active');
 }
-setInterval(spawnHeart,700);
 
-// Petals
-const canvas=document.getElementById('petal-canvas'), ctx=canvas.getContext('2d');
-function resize(){ canvas.width=innerWidth; canvas.height=innerHeight; }
-resize(); window.addEventListener('resize',resize);
-const cols=['#f4a0b5','#f9c8d4','#e8445a','#c9a7d6','#d4a843'];
-const petals=Array.from({length:30},()=>({
-  x:Math.random()*innerWidth, y:Math.random()*innerHeight,
-  size:6+Math.random()*10, speed:0.8+Math.random()*1.8,
-  drift:(Math.random()-0.5)*1.4, rot:Math.random()*Math.PI*2,
-  rotSpeed:(Math.random()-0.5)*0.04, opacity:0.35+Math.random()*0.5,
-  color:cols[Math.floor(Math.random()*cols.length)]
-}));
-(function loop(){
-  ctx.clearRect(0,0,canvas.width,canvas.height);
-  petals.forEach(p=>{
-    p.y+=p.speed; p.x+=p.drift+Math.sin(p.y*0.018)*0.8; p.rot+=p.rotSpeed;
-    if(p.y>canvas.height+20){ p.y=-20; p.x=Math.random()*canvas.width; }
-    ctx.save(); ctx.translate(p.x,p.y); ctx.rotate(p.rot);
-    ctx.globalAlpha=p.opacity; ctx.fillStyle=p.color;
-    ctx.beginPath(); ctx.ellipse(0,0,p.size,p.size*0.55,0,0,Math.PI*2); ctx.fill();
-    ctx.restore();
+// ====================================================================
+// PORT CHART
+// ====================================================================
+let sortKey = 'port', sortDir = 1, activeFilter = 'all';
+
+const CATS = [...new Set(PORTS.map(p => p.cat))].sort();
+const TRANSPORT_BADGE = { TCP: 'badge-tcp', UDP: 'badge-udp', Both: 'badge-both' };
+const CAT_BADGE = {
+  'Network': 'badge-cat-net', 'Security': 'badge-cat-sec', 'Email': 'badge-cat-email',
+  'Web': 'badge-cat-web', 'File Transfer': 'badge-cat-file', 'Directory': 'badge-cat-dir',
+  'Remote Access': 'badge-cat-remote'
+};
+
+function initChart() {
+  // Stats
+  const stats = [
+    { num: PORTS.length, lbl: 'Total Ports' },
+    { num: PORTS.filter(p => p.transport === 'TCP').length, lbl: 'TCP Only' },
+    { num: PORTS.filter(p => p.transport === 'UDP').length, lbl: 'UDP Only' },
+    { num: PORTS.filter(p => p.transport === 'Both').length, lbl: 'TCP & UDP' },
+  ];
+  document.getElementById('statsRow').innerHTML = stats.map(s =>
+    `<div class="stat-card"><div class="num">${s.num}</div><div class="lbl">${s.lbl}</div></div>`
+  ).join('');
+
+  // Filters
+  const filters = [{ val: 'all', lbl: 'All' }, ...CATS.map(c => ({ val: c, lbl: c }))];
+  document.getElementById('filterBtns').innerHTML = filters.map(f =>
+    `<button class="filter-btn${f.val === 'all' ? ' active' : ''}" onclick="setFilter('${f.val}', this)">${f.lbl}</button>`
+  ).join('');
+
+  renderTable();
+}
+
+function setFilter(val, btn) {
+  activeFilter = val;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderTable();
+}
+
+function sortTable(key) {
+  if (sortKey === key) sortDir *= -1;
+  else { sortKey = key; sortDir = 1; }
+  renderTable();
+}
+
+function renderTable() {
+  const q = document.getElementById('searchInput').value.toLowerCase();
+  let rows = PORTS.filter(p =>
+    (activeFilter === 'all' || p.cat === activeFilter) &&
+    (!q || String(p.port).includes(q) || p.name.toLowerCase().includes(q) ||
+      p.desc.toLowerCase().includes(q) || p.cat.toLowerCase().includes(q))
+  );
+  rows.sort((a, b) => {
+    const av = sortKey === 'port' ? a.port : a.name.toLowerCase();
+    const bv = sortKey === 'port' ? b.port : b.name.toLowerCase();
+    return av < bv ? -sortDir : av > bv ? sortDir : 0;
   });
-  requestAnimationFrame(loop);
-})();
-
-// Confetti on click
-const ccols=['#e8445a','#f9c8d4','#c9a7d6','#d4a843','#a8d5bc','#f4a0b5','#8b1a2f'];
-function explodeConfetti(e){
-  for(let i=0;i<40;i++){
-    const c=document.createElement('div'); c.className='confetti-piece';
-    const ang=Math.random()*360, vel=80+Math.random()*150, sz=6+Math.random()*10;
-    c.style.cssText=`left:${e.clientX}px;top:${e.clientY}px;width:${sz}px;height:${sz}px;background:${ccols[Math.floor(Math.random()*ccols.length)]};border-radius:${Math.random()>.5?'50%':'3px'};animation:confetti-fall ${0.7+Math.random()*0.9}s ease-out forwards;transform:translate(${Math.cos(ang*Math.PI/180)*vel}px,${Math.sin(ang*Math.PI/180)*vel}px);`;
-    document.body.appendChild(c); setTimeout(()=>c.remove(),1600);
-  }
+  document.getElementById('portBody').innerHTML = rows.map(p => `
+    <tr>
+      <td><span class="port-num">${p.port}</span></td>
+      <td>
+        <span class="port-name">${p.name}</span>
+        ${p.tip ? `<span class="exam-tip">★ ${p.tip}</span>` : ''}
+      </td>
+      <td><span class="badge ${TRANSPORT_BADGE[p.transport]}">${p.transport}</span></td>
+      <td><span class="badge ${CAT_BADGE[p.cat] || ''}">${p.cat}</span></td>
+      <td>${p.desc}</td>
+    </tr>
+  `).join('') || '<tr><td colspan="5" style="text-align:center;color:var(--muted);padding:2rem;">No results found</td></tr>';
 }
+
+// ====================================================================
+// FLASHCARDS
+// ====================================================================
+let fcDeck = [], fcIndex = 0, fcKnown = 0, fcTotal = 0;
+
+function getFilteredPorts() {
+  const cat = document.getElementById('fcFilter').value;
+  return cat === 'all' ? [...PORTS] : PORTS.filter(p => p.cat === cat);
+}
+
+function shuffleArray(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+function initFlashcards() {
+  fcDeck = shuffleArray([...getFilteredPorts()]);
+  fcIndex = 0;
+  fcKnown = 0;
+  fcTotal = fcDeck.length;
+  document.getElementById('fcSummary').classList.remove('visible');
+  document.getElementById('fcArena').style.display = 'flex';
+  renderFC();
+}
+
+function shuffleCards() {
+  fcDeck = shuffleArray(fcDeck);
+  fcIndex = 0;
+  renderFC();
+}
+
+function renderFC() {
+  if (fcDeck.length === 0) return;
+  const card = fcDeck[fcIndex];
+  const mode = document.getElementById('fcMode').value;
+  const pct = Math.round((fcIndex / fcTotal) * 100);
+
+  document.getElementById('fcFill').style.width = pct + '%';
+  document.getElementById('fcProgressText').textContent = `${fcIndex + 1} / ${fcTotal}`;
+  document.getElementById('fcCard').classList.remove('flipped');
+
+  if (mode === 'port') {
+    document.getElementById('fcHint').textContent = 'What service uses this port?';
+    document.getElementById('fcMain').textContent = card.port;
+    document.getElementById('fcSub').textContent = card.transport;
+    document.getElementById('fcAnsPort').textContent = card.name;
+    document.getElementById('fcAnsProto').textContent = `Port ${card.port} · ${card.transport}`;
+  } else {
+    document.getElementById('fcHint').textContent = 'What port does this use?';
+    document.getElementById('fcMain').textContent = card.name;
+    document.getElementById('fcSub').textContent = card.cat;
+    document.getElementById('fcAnsPort').textContent = card.port;
+    document.getElementById('fcAnsProto').textContent = `${card.name} · ${card.transport}`;
+  }
+  document.getElementById('fcAnsDesc').textContent = card.desc;
+  document.getElementById('fcPrev').disabled = fcIndex === 0;
+  document.getElementById('fcNext').disabled = fcIndex === fcTotal - 1;
+}
+
+function flipCard() {
+  document.getElementById('fcCard').classList.toggle('flipped');
+}
+
+function fcNavigate(dir) {
+  fcIndex = Math.max(0, Math.min(fcTotal - 1, fcIndex + dir));
+  renderFC();
+}
+
+function markCard(known) {
+  if (known) fcKnown++;
+  fcIndex++;
+  if (fcIndex >= fcTotal) showFCSummary();
+  else renderFC();
+}
+
+function showFCSummary() {
+  document.getElementById('fcArena').style.display = 'none';
+  const s = document.getElementById('fcSummary');
+  s.classList.add('visible');
+  document.getElementById('fcBigScore').textContent = `${fcKnown} / ${fcTotal}`;
+  document.getElementById('fcBigScore').style.color = fcKnown >= fcTotal * 0.8 ? 'var(--green)' : fcKnown >= fcTotal * 0.5 ? 'var(--yellow)' : 'var(--red)';
+}
+
+// ====================================================================
+// MCQ
+// ====================================================================
+const MCQ_BANK = [
+  // Port → Service
+  { q: "Which port is used by SSH for secure remote access?", opts: ["22", "23", "21", "25"], ans: 0, exp: "<strong>Port 22</strong> is used by SSH (Secure Shell). SSH replaced the insecure Telnet (port 23) and provides encrypted remote terminal access, SFTP, and SCP." },
+  { q: "A network administrator needs to configure a firewall to allow encrypted web traffic. Which port should be permitted?", opts: ["80", "443", "8080", "8443"], ans: 1, exp: "<strong>Port 443</strong> is used by HTTPS (HTTP over TLS). Port 80 is unencrypted HTTP, while 8080 and 8443 are alternate HTTP/HTTPS ports." },
+  { q: "Which port does DNS primarily use for standard queries?", opts: ["53 TCP", "53 UDP", "67 UDP", "123 UDP"], ans: 1, exp: "<strong>Port 53 UDP</strong> is used for standard DNS queries due to low overhead. DNS uses TCP on port 53 for zone transfers and responses larger than 512 bytes." },
+  { q: "An attacker captures traffic on port 23. Which protocol is most likely being used?", opts: ["SSH", "Telnet", "RDP", "VNC"], ans: 1, exp: "<strong>Telnet</strong> uses port 23 and transmits all data (including credentials) in cleartext, making it a major security risk. SSH (port 22) is its secure replacement." },
+  { q: "Which port is associated with SMTP for sending email between servers?", opts: ["25", "110", "143", "587"], ans: 0, exp: "<strong>Port 25</strong> is the standard SMTP port for server-to-server email relay. Port 587 is used for authenticated client-to-server submission, and 110/143 are for receiving email (POP3/IMAP)." },
+  { q: "A security analyst sees traffic on port 3389 being blocked by the firewall. Which service is affected?", opts: ["VNC", "Telnet", "RDP", "SSH"], ans: 2, exp: "<strong>RDP (Remote Desktop Protocol)</strong> uses port 3389. It is targeted by attacks like BlueKeep (CVE-2019-0708) and should not be exposed directly to the internet." },
+  { q: "Which port does LDAP use for unencrypted directory queries?", opts: ["389", "636", "88", "445"], ans: 0, exp: "<strong>Port 389</strong> is used by LDAP for directory queries in plaintext. Port 636 is LDAPS (LDAP over TLS) which should be used instead to protect credentials in transit." },
+  { q: "An organisation wants to implement Kerberos for single sign-on. Which port must be open?", opts: ["88", "389", "443", "636"], ans: 0, exp: "<strong>Port 88</strong> is used by Kerberos for ticket-based authentication. Kerberos is the default authentication protocol in Active Directory environments." },
+  { q: "Which port is used by SNMP for receiving management data?", opts: ["161", "162", "514", "123"], ans: 0, exp: "<strong>Port 161 UDP</strong> is used by SNMP agents to receive queries from the management station. Port 162 is used for SNMP traps (unsolicited alerts from agents to the manager)." },
+  { q: "A VPN solution uses IPsec. Which port does IKE use for key exchange?", opts: ["500", "1701", "1723", "4500"], ans: 0, exp: "<strong>Port 500 UDP</strong> is used by IKE (Internet Key Exchange) for IPsec VPN negotiation. Port 4500 UDP is used when NAT traversal is required." },
+  // Service → Port
+  { q: "Which port number is used by FTPS (FTP over TLS) for implicit TLS connections?", opts: ["21", "22", "990", "989"], ans: 2, exp: "<strong>Port 990</strong> is used by FTPS for implicit TLS control connections (port 989 for data). Regular FTP uses port 21 (control) and 20 (data)." },
+  { q: "What port does POP3S (secure POP3) use?", opts: ["110", "143", "993", "995"], ans: 3, exp: "<strong>Port 995</strong> is used by POP3S (POP3 over TLS). Port 110 is unencrypted POP3, port 143 is IMAP, and port 993 is IMAPS." },
+  { q: "Which port does IMAPS use for encrypted email access?", opts: ["110", "143", "993", "995"], ans: 2, exp: "<strong>Port 993</strong> is used by IMAPS (IMAP over TLS). It is the secure version of IMAP (port 143)." },
+  { q: "RADIUS uses which port for authentication requests?", opts: ["1812", "1813", "49", "1645"], ans: 0, exp: "<strong>Port 1812 UDP</strong> is the standard RADIUS authentication port (updated from the older 1645). Port 1813 is for RADIUS accounting." },
+  { q: "Which port is used by TACACS+ for AAA services?", opts: ["1812", "49", "88", "389"], ans: 1, exp: "<strong>Port 49 TCP</strong> is used by TACACS+. Unlike RADIUS, TACACS+ encrypts the entire payload and uses TCP, making it more reliable and secure." },
+  // Security concepts
+  { q: "A company wants to replace unencrypted syslog (UDP 514) with an encrypted alternative. What should they use?", opts: ["TCP 514", "TCP 6514", "UDP 6514", "TCP 515"], ans: 1, exp: "<strong>Port 6514 TCP</strong> is used for syslog over TLS, providing encrypted centralised logging. This protects log integrity and confidentiality in transit." },
+  { q: "Which port is commonly exploited by the EternalBlue vulnerability and WannaCry ransomware?", opts: ["139", "445", "3389", "137"], ans: 1, exp: "<strong>Port 445 TCP</strong> (SMB) was exploited by EternalBlue/WannaCry. SMBv1 had a critical buffer overflow vulnerability. SMB port 445 should never be exposed to the internet." },
+  { q: "An analyst finds unusual outbound traffic on port 4444. What does this most likely indicate?", opts: ["Normal SNMP traffic", "DNS zone transfer", "Metasploit/backdoor shell", "Encrypted VPN tunnel"], ans: 2, exp: "<strong>Port 4444</strong> is the default listener port for Metasploit and many backdoor/RAT tools. Outbound traffic to this port is a strong indicator of compromise (IoC)." },
+  { q: "Which VPN protocol is considered insecure and should be avoided in production?", opts: ["OpenVPN", "IKEv2/IPsec", "PPTP", "L2TP/IPsec"], ans: 2, exp: "<strong>PPTP (port 1723)</strong> is considered cryptographically broken. MS-CHAPv2 (used by PPTP) is vulnerable to offline dictionary attacks. Modern alternatives include IKEv2/IPsec and OpenVPN." },
+  { q: "A firewall rule blocks port 23 inbound. What attack vector is being mitigated?", opts: ["Unencrypted FTP sessions", "Cleartext Telnet access", "Unencrypted DNS queries", "Unauthenticated SNMP polls"], ans: 1, exp: "<strong>Telnet (port 23)</strong> transmits all data including credentials in plaintext. Blocking port 23 prevents cleartext remote access; SSH (port 22) should be used instead." },
+  { q: "DHCP uses which pair of ports?", opts: ["67 and 68", "69 and 70", "53 and 54", "123 and 124"], ans: 0, exp: "<strong>Ports 67 (server) and 68 (client) UDP</strong> are used by DHCP. A rogue DHCP server can perform a MITM attack by giving clients a malicious gateway or DNS server." },
+  { q: "Which port does NTP use to synchronise clocks?", opts: ["123", "161", "514", "67"], ans: 0, exp: "<strong>Port 123 UDP</strong> is used by NTP. Accurate time is critical for Kerberos (which rejects tickets if clocks are skewed more than 5 minutes) and log correlation in SIEM tools." },
+  { q: "A penetration tester is told the target uses LDAPS. Which port should they probe?", opts: ["389", "636", "88", "3268"], ans: 1, exp: "<strong>Port 636 TCP</strong> is used by LDAPS (LDAP over SSL/TLS). It encrypts directory queries, protecting credentials. Regular LDAP on port 389 is unencrypted." },
+  { q: "Which port does OpenVPN use by default?", opts: ["1194", "1701", "4500", "500"], ans: 0, exp: "<strong>Port 1194</strong> (TCP or UDP) is the default OpenVPN port. OpenVPN uses SSL/TLS for key exchange and is considered more secure than PPTP or L2TP." },
+  { q: "A security policy requires blocking TFTP at the firewall. Which port should be blocked?", opts: ["20", "21", "69", "22"], ans: 2, exp: "<strong>Port 69 UDP</strong> is used by TFTP (Trivial FTP). TFTP has no authentication and no directory listing, making it highly insecure. It is used for PXE boot and router firmware updates." },
+  { q: "What protocol uses port 88 and is integral to Active Directory authentication?", opts: ["LDAP", "RADIUS", "Kerberos", "TACACS+"], ans: 2, exp: "<strong>Kerberos</strong> uses port 88 and is the primary authentication protocol in Active Directory. It uses tickets (TGT and service tickets) to grant access without sending passwords." },
+  { q: "Which port does SMB use in modern Windows environments (without NetBIOS)?", opts: ["137", "138", "139", "445"], ans: 3, exp: "<strong>Port 445 TCP</strong> is used by SMB directly over TCP/IP (without NetBIOS). This is the modern method used by Windows file sharing. Port 139 used NetBIOS over TCP/IP." },
+  { q: "An IDS alert fires on port 1433 traffic from an untrusted network. What service is being targeted?", opts: ["MySQL", "PostgreSQL", "Microsoft SQL Server", "Oracle Database"], ans: 2, exp: "<strong>Port 1433 TCP</strong> is the default port for Microsoft SQL Server. It should never be directly accessible from untrusted networks and should be protected by a firewall." },
+  { q: "Which encrypted protocol should replace HTTP (port 80) for secure web communications?", opts: ["HTTPS on port 443", "FTPS on port 990", "SSH on port 22", "SMTPS on port 465"], ans: 0, exp: "<strong>HTTPS on port 443</strong> uses TLS to encrypt web traffic, protecting against eavesdropping and MITM attacks. TLS 1.2 or 1.3 should be enforced; TLS 1.0 and 1.1 are deprecated." },
+  { q: "A user reports that their VoIP calls are being intercepted. Which port is likely involved in the unencrypted signalling?", opts: ["5060", "5061", "4569", "1720"], ans: 0, exp: "<strong>Port 5060 (SIP)</strong> is used for unencrypted VoIP call signalling. SIPS (SIP over TLS) on port 5061 should be used instead to protect call setup and credentials." },
+];
+
+let quizDeck = [], qIndex = 0, qScore = 0, selectedOpt = null, answered = false;
+
+function startQuiz() {
+  const cat = document.getElementById('mcqCat').value;
+  let pool = cat === 'all' ? [...MCQ_BANK] : MCQ_BANK.filter(q => {
+    const rel = PORTS.filter(p => p.cat === cat);
+    return rel.some(p => q.q.includes(String(p.port)) || q.q.toLowerCase().includes(p.name.toLowerCase()));
+  });
+  if (pool.length < 5) pool = [...MCQ_BANK];
+  pool = shuffleArray(pool);
+
+  const countEl = document.getElementById('mcqCount').value;
+  const count = countEl === 'all' ? pool.length : Math.min(parseInt(countEl), pool.length);
+  quizDeck = pool.slice(0, count);
+  qIndex = 0;
+  qScore = 0;
+
+  document.getElementById('mcqSummary').classList.remove('visible');
+  document.getElementById('mcqArena').style.display = 'flex';
+  renderQuestion();
+}
+
+function renderQuestion() {
+  if (qIndex >= quizDeck.length) { showMCQSummary(); return; }
+  const q = quizDeck[qIndex];
+  selectedOpt = null;
+  answered = false;
+
+  document.getElementById('mcqCounter').textContent = `Question ${qIndex + 1} of ${quizDeck.length}`;
+  document.getElementById('mcqScoreBadge').textContent = `Score: ${qScore} / ${qIndex}`;
+  document.getElementById('mcqFill').style.width = `${(qIndex / quizDeck.length) * 100}%`;
+  document.getElementById('mcqQuestion').textContent = q.q;
+
+  const letters = ['A', 'B', 'C', 'D'];
+  document.getElementById('mcqOptions').innerHTML = shuffleArray(
+    q.opts.map((opt, i) => ({ opt, orig: i }))
+  ).map((item, i) => `
+    <div class="mcq-option" id="opt${i}" data-orig="${item.orig}" onclick="selectOption(${i})">
+      <span class="opt-letter">${letters[i]}</span>
+      ${item.opt}
+    </div>
+  `).join('');
+
+  document.getElementById('mcqExplanation').classList.remove('visible');
+  document.getElementById('mcqExplanation').innerHTML = '';
+  document.getElementById('mcqCheckBtn').style.display = '';
+  document.getElementById('mcqCheckBtn').disabled = true;
+  document.getElementById('mcqNextBtn').style.display = 'none';
+}
+
+function selectOption(i) {
+  if (answered) return;
+  document.querySelectorAll('.mcq-option').forEach(o => o.classList.remove('selected'));
+  document.getElementById('opt' + i).classList.add('selected');
+  selectedOpt = i;
+  document.getElementById('mcqCheckBtn').disabled = false;
+}
+
+function checkAnswer() {
+  if (selectedOpt === null || answered) return;
+  answered = true;
+  const q = quizDeck[qIndex];
+  const options = document.querySelectorAll('.mcq-option');
+
+  let correct = false;
+  options.forEach((el, i) => {
+    el.classList.add('disabled');
+    const orig = parseInt(el.dataset.orig);
+    if (orig === q.ans) el.classList.add('correct');
+    if (i === selectedOpt) {
+      if (orig === q.ans) { correct = true; }
+      else el.classList.add('wrong');
+    }
+  });
+
+  if (correct) qScore++;
+  document.getElementById('mcqScoreBadge').textContent = `Score: ${qScore} / ${qIndex + 1}`;
+  document.getElementById('mcqExplanation').innerHTML = q.exp;
+  document.getElementById('mcqExplanation').classList.add('visible');
+  document.getElementById('mcqCheckBtn').style.display = 'none';
+  document.getElementById('mcqNextBtn').style.display = '';
+}
+
+function nextQuestion() {
+  qIndex++;
+  renderQuestion();
+}
+
+function showMCQSummary() {
+  document.getElementById('mcqArena').style.display = 'none';
+  const s = document.getElementById('mcqSummary');
+  s.classList.add('visible');
+  const pct = Math.round((qScore / quizDeck.length) * 100);
+  document.getElementById('mcqBigScore').textContent = pct + '%';
+  document.getElementById('mcqBigScore').style.color = pct >= 80 ? 'var(--green)' : pct >= 60 ? 'var(--yellow)' : 'var(--red)';
+  const grade = pct >= 90 ? 'Excellent! Exam Ready.' : pct >= 80 ? 'Great job! Keep it up.' : pct >= 60 ? 'Good. Review the missed items.' : 'Keep studying — you got this!';
+  document.getElementById('mcqGrade').textContent = grade;
+  document.getElementById('rbCorrect').textContent = qScore;
+  document.getElementById('rbWrong').textContent = quizDeck.length - qScore;
+  document.getElementById('rbTotal').textContent = quizDeck.length;
+}
+
+// ====================================================================
+// INIT
+// ====================================================================
+initChart();
+initFlashcards();
 </script>
 </body>
 </html>
